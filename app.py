@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, jsonify
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -12,9 +12,13 @@ app = Flask(__name__)
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
-def send_email():
-    subject = "Rapport om tomt kaffelager"
-    body = "Det er rapportert om tomt / snart tomt for kaffe på loungen."
+def send_email(string):
+    subject = f"Lagerbeholdningsrapport [{string}]"
+    body = (
+        f"Det er rapportert om tomt / snart tomt for {string} på loungen. Vennligst gjør noe med dette snarest.\n\n"
+        "Med vennlig hilsen,\n"
+        "Komtek Kaffeinitiativ for Sammenkomst og Kunnskap ☕️"
+    )
 
     # Create the email
     msg = MIMEMultipart()
@@ -38,9 +42,14 @@ def send_email():
 def home():
     return render_template('index.html')
 
-@app.route('/report', methods=['POST'])
-def report():
-    send_email()
+@app.route('/report/kaffe', methods=['POST'])
+def report_kaffe():
+    send_email("kaffe")
+    return jsonify({"message": "Report sent successfully!"}), 200
+
+@app.route('/report/kaffefilter', methods=['POST'])
+def report_kaffefilter():
+    send_email("kaffefilter")
     return jsonify({"message": "Report sent successfully!"}), 200
 
 if __name__ == '__main__':

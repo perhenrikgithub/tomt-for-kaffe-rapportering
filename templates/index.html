@@ -3,19 +3,20 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Takk for at du rapporterte</title>
+        <title>Mangler på Loungen</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple-icons/siimple-icons.css" />
         <link rel="stylesheet" href="../static/css/styles.css" />
         <script>
-            function sendReport() {
-                // Hide the .wrapper element
-                document.querySelector("h1").style.display = "none";
-                document.querySelector("button").style.display = "none";
+            function sendReport(string) {
+                // Hide all elements with class .hide
+                document.querySelectorAll(".hide").forEach((element) => {
+                    element.style.display = "none";
+                });
 
                 // Show the .loader element
                 document.querySelector(".loader").style.display = "inline-block";
 
-                fetch("/report", {
+                fetch("/report/" + string, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -25,25 +26,25 @@
                         if (response.ok) {
                             // Replace the body content dynamically
                             document.body.innerHTML = `
-                            <div class="wrapper">
-                                <div class="container">
-                                    <i class="si-mug" style="font-size: 100px;"></i>
-                                    <h1>✨ Takk ✨</h1>
-                                    <p>Studentkontaktene har fått beskjed og skal fikse 🤌🏻</p>
-                                </div>
+                        <div class="wrapper">
+                            <div class="container">
+                                <i class="si-mug" style="font-size: 100px;"></i>
+                                <h1>✨ Takk ✨</h1>
+                                <p>Studentkontaktene har fått beskjed og skal fikse 🤌🏻</p>
                             </div>
+                        </div>
 
-                            <footer>
-                                <p>Laget av <a href="https://youtu.be/dQw4w9WgXcQ?si=DBVnGiVbi7so50L0">Per</a> fordi det var tomt for kaffe en gang for mye</p>
-                            </footer>
-                        `;
+                        <footer>
+                            <p>Laget av <a href="https://youtu.be/dQw4w9WgXcQ?si=DBVnGiVbi7so50L0">Per</a> fordi det var tomt for kaffe en gang for mye</p>
+                        </footer>
+                    `;
                         } else {
                             alert("Failed to send report.");
                         }
                     })
                     .catch((error) => {
                         console.error("Failed to send report. Status:", response.status);
-                        alert("An error occurred.");
+                        alert("En feil oppstod. Etterspør kaffe manuelt (mas på studentkontaktene)");
                     });
             }
         </script>
@@ -51,8 +52,9 @@
     <body>
         <div class="wrapper">
             <div class="container">
-                <h1 class="hide">Tomt eller snart tomt for kaffe?</h1>
-                <button class="hide" onclick="sendReport()">Rapporter til Studentkontaktene</button>
+                <h1 class="hide">Rapporter mangler 🚨</h1>
+                <button class="hide" onclick="sendReport('kaffe')">Tomt eller snart tomt for kaffe</button>
+                <button class="hide" onclick="sendReport('kaffefilter')">Tomt eller snart tomt for kaffefilter</button>
                 <span class="loader"></span>
             </div>
         </div>
